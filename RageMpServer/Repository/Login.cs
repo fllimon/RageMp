@@ -50,24 +50,15 @@ namespace RageMpServer.Repository
                 NAPI.ClientEvent.TriggerClientEvent(player, "ShowAuthCef", false);
 
                 var playerData = _mapper.Map<Entity.Player>(entity);
+                var hasData = player.HasData(Entity.Player.PLayerData);
 
-                //var playerData = new Entity.Player()
-                //{
-                //    FirstName = entity.FirstName,
-                //    LastName = entity.LastName,
-                //    Position = new Vector3(entity.Position.PositionX, entity.Position.PositionY, entity.Position.PositionZ),
-                //    Expirience = entity.Expirience,
-                //    Lvl = entity.Lvl,
-                //    Money = entity.Money,
-                //    Armor = entity.Armor,
-                //    Health = entity.Health
-                //};
-
-                var client = player.HasData(Entity.Player.PLayerData);
-
-                if (client == null)
+                if (!hasData)
                 {
                     player.SetData(Entity.Player.PLayerData, playerData);
+                    player.Name = playerData.FirstName + " " + playerData.LastName;
+                    player.Position = playerData.Position;
+                    player.Health = playerData.Health;
+                    player.Armor = playerData.Armor;
                 }
             }
         }

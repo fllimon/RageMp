@@ -78,19 +78,6 @@ namespace RageMpServer.Repository
             NAPI.ClientEvent.TriggerClientEvent(player, "ShowCreatePlayerForm", false);
 
             var playerData = _mapper.Map<Entity.Player>(newPlayer);
-
-            //var playerData = new Entity.Player()
-            //{
-            //    FirstName = newPlayer.FirstName,
-            //    LastName = newPlayer.LastName,
-            //    Position = new Vector3(newPlayer.Position.PositionX, newPlayer.Position.PositionY, newPlayer.Position.PositionZ),
-            //    Expirience = newPlayer.Expirience,
-            //    Lvl = newPlayer.Lvl,
-            //    Money = newPlayer.Money,
-            //    Armor = newPlayer.Armor,
-            //    Health = newPlayer.Health
-            //};
-
             var hasData = player.HasData(Entity.Player.PLayerData);
 
             if (!hasData)
