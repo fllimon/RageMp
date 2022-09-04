@@ -19,7 +19,7 @@ namespace RageClient
             Events.Add("SERVER:CLIENT:ShowAuthCef", ShowAuthCef);
             Events.Add("CEF:CLIENT:SetLoginInfo", SendLoginInfo);
             Events.Add("CEF:CLIENT:Registration", RegisterUser);
-            Events.Add("AuthError", LoginRegisrationError);
+            Events.Add("SERVER:CLIENT:AuthError", AuthorizationError);
 
             Events.Add("SERVER:CLIENT:ShowCreatePlayerForm", ShowCreatePlayerCef);
             Events.Add("CEF:CLIENT:CreatePlayer", CreatePlayer);
@@ -47,7 +47,7 @@ namespace RageClient
             Events.CallRemote("CLIENT:SERVER:CreatePlayer", (string)args[0], (string)args[1], (string)args[2]);
         }
 
-        private void LoginRegisrationError(object[] args)
+        private void AuthorizationError(object[] args)
         {
             _loginRegistrationForm.ExecuteJs("InvalidPassword()");
         }

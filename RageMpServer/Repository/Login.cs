@@ -29,7 +29,7 @@ namespace RageMpServer.Repository
 
             if (user == null)
             {
-                NAPI.ClientEvent.TriggerClientEvent(player, "AuthError");
+                NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:AuthError");
 
                 return;
             }
@@ -47,7 +47,7 @@ namespace RageMpServer.Repository
                     return;
                 }
 
-                NAPI.ClientEvent.TriggerClientEvent(player, "ShowAuthCef", false);
+                NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowAuthCef", false);
 
                 var playerData = _mapper.Map<Entity.Player>(entity);
                 var hasData = player.HasData(Entity.Player.PLayerData);
