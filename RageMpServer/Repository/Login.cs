@@ -22,7 +22,7 @@ namespace RageMpServer.Repository
             _mapper = MapperInitializer.GetInstance();
         }
 
-        [RemoteEvent("LoginInfoFromClientEvent")]
+        [RemoteEvent("CLIENT:SERVER:SendLoginInfo")]
         public void LoginInfoFromClient(GTANetworkAPI.Player player, string login, string password)
         {
             var user = GetUserByLogin(login);
@@ -40,9 +40,9 @@ namespace RageMpServer.Repository
 
                 if (entity == null)
                 {
-                    NAPI.ClientEvent.TriggerClientEvent(player, "ShowAuthCef", false);
-                    NAPI.ClientEvent.TriggerClientEvent(player, "ShowCreatePlayerForm", true, user.Id);
-                    NAPI.ClientEvent.TriggerClientEvent(player, "SetUserId", user.Id);
+                    NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowAuthCef", false);
+                    NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowCreatePlayerForm", true, user.Id);
+                    NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:SetUserId", user.Id);
 
                     return;
                 }

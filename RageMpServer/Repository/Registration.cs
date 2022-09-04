@@ -19,7 +19,7 @@ namespace RageMpServer.Repository
             _mapper = MapperInitializer.GetInstance();
         }
 
-        [RemoteEvent("RegistrationInfoFromClientEvent")]
+        [RemoteEvent("CLIENT:SERVER:RegisterUser")]
         public void RegistrationInfoFromClient(GTANetworkAPI.Player player, string login, string email, string password)
         {
             if (IsNullOrEmpty(login) || IsNullOrEmpty(email) || IsNullOrEmpty(password))
@@ -48,12 +48,12 @@ namespace RageMpServer.Repository
             AddUser(user);
             SaveChanges();
 
-            NAPI.ClientEvent.TriggerClientEvent(player, "ShowAuthCef", false);
-            NAPI.ClientEvent.TriggerClientEvent(player, "ShowCreatePlayerForm", true, user.Id);
-            NAPI.ClientEvent.TriggerClientEvent(player, "SetUserId", user.Id);
+            NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowAuthCef", false);
+            NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowCreatePlayerForm", true, user.Id);
+            NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:SetUserId", user.Id);
         }
 
-        [RemoteEvent("CreatePlayerInfoFromClientEvent")]
+        [RemoteEvent("CLIENT:SERVER:CreatePlayer")]
         public void CreatePlayer(GTANetworkAPI.Player player, string firstName, string lastName, string userId)
         {
             Guid id = Guid.Parse(userId);
@@ -75,7 +75,7 @@ namespace RageMpServer.Repository
             AddPlayer(newPlayer);
             SaveChanges();
 
-            NAPI.ClientEvent.TriggerClientEvent(player, "ShowCreatePlayerForm", false);
+            NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowCreatePlayerForm", false);
 
             var playerData = _mapper.Map<Entity.Player>(newPlayer);
             var hasData = player.HasData(Entity.Player.PLayerData);

@@ -9,7 +9,6 @@ namespace RageClient
     {
         private HtmlWindow _loginRegistrationForm = null;
         private HtmlWindow _createPlayerForm = null;
-        private Guid _playerId = Guid.Empty;
 
         public Authenticate()
         {
@@ -17,19 +16,19 @@ namespace RageClient
             _createPlayerForm = new HtmlWindow("package://auth/CreatePlayer/index.html");
             _createPlayerForm.Active = false;
 
-            Events.Add("ShowAuthCef", ShowAuthCef);
-            Events.Add("LoginInfoToClientEvent", LoginInfoToClientEvent);
-            Events.Add("RegistrationInfoToClientEvent", RegistrationInfoToClientEvent);
+            Events.Add("SERVER:CLIENT:ShowAuthCef", ShowAuthCef);
+            Events.Add("CEF:CLIENT:SetLoginInfo", SendLoginInfo);
+            Events.Add("CEF:CLIENT:Registration", RegisterUser);
             Events.Add("AuthError", LoginRegisrationError);
 
-            Events.Add("ShowCreatePlayerForm", ShowCreatePlayerCef);
-            Events.Add("CreatePlayerInfoToClientEvent", CreatePlayer);
-            Events.Add("SetUserId", SetUserId);
+            Events.Add("SERVER:CLIENT:ShowCreatePlayerForm", ShowCreatePlayerCef);
+            Events.Add("CEF:CLIENT:CreatePlayer", CreatePlayer);
+            Events.Add("SERVER:CLIENT:SetUserId", SetUserId);
         }
 
         private void SetUserId(object[] args)
         {
-            _createPlayerForm.Call("SetUserId", (string)args[0]);
+            _createPlayerForm.Call("CLIENT:CEF:SetUserId", (string)args[0]);
         }
 
         private void ShowCreatePlayerCef(object[] args)
@@ -45,7 +44,7 @@ namespace RageClient
 
         private void CreatePlayer(object[] args)
         {
-            Events.CallRemote("CreatePlayerInfoFromClientEvent", (string)args[0], (string)args[1], (string)args[2]);
+            Events.CallRemote("CLIENT:SERVER:CreatePlayer", (string)args[0], (string)args[1], (string)args[2]);
         }
 
         private void LoginRegisrationError(object[] args)
@@ -72,14 +71,14 @@ namespace RageClient
             Player.LocalPlayer.FreezePosition(flag);
         }
 
-        private void RegistrationInfoToClientEvent(object[] args)
+        private void RegisterUser(object[] args)
         {
-            Events.CallRemote("RegistrationInfoFromClientEvent", (string)args[0], (string)args[1], (string)args[2]);
+            Events.CallRemote("CLIENT:SERVER:RegisterUser", (string)args[0], (string)args[1], (string)args[2]);
         }
 
-        private void LoginInfoToClientEvent(object[] args)
+        private void SendLoginInfo(object[] args)
         {
-            Events.CallRemote("LoginInfoFromClientEvent", (string)args[0], (string)args[1]);
+            Events.CallRemote("CLIENT:SERVER:SendLoginInfo", (string)args[0], (string)args[1]);
         }
     }
 }

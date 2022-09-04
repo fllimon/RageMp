@@ -25,8 +25,8 @@ namespace RageMpServer.Extensions
 
                     cfg.CreateMap<Entity.Player, Models.Player>()
                     .ForPath(x => x.Position.PositionX, option => option.MapFrom(x => x.Position.X))
-                    .ForPath(x => x.Position.PositionX, option => option.MapFrom(x => x.Position.Y))
-                    .ForPath(x => x.Position.PositionX, option => option.MapFrom(x => x.Position.Z))
+                    .ForPath(x => x.Position.PositionY, option => option.MapFrom(x => x.Position.Y))
+                    .ForPath(x => x.Position.PositionZ, option => option.MapFrom(x => x.Position.Z))
                     .ForPath(x => x.Position.RotationX, option => option.MapFrom(x => x.Rotation.X))
                     .ForPath(x => x.Position.RotationY, option => option.MapFrom(x => x.Rotation.Y))
                     .ForPath(x => x.Position.RotationZ, option => option.MapFrom(x => x.Rotation.Z));
