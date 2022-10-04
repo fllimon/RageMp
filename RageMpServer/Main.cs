@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
@@ -37,11 +38,11 @@ namespace RageMpServer
         [ServerEvent(Event.PlayerConnected)]
         public void OnPlayerConnected(Player player)
         {
-            NAPI.ClientEvent.TriggerClientEvent(player, "ShowAuthCef", true);
+            NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowAuthCef", true);
         }
 
         [ServerEvent(Event.PlayerDisconnected)]
-        public void OnPlayerDisconnected(Player player, DisconnectionType type, string reason)
+        public async Task OnPlayerDisconnected(Player player, DisconnectionType type, string reason)
         {
             bool hasData = player.HasData(Entity.Player.PLayerData);
 
@@ -55,9 +56,9 @@ namespace RageMpServer
 
                 var mapedPlayer = _mapper.Map<Models.Player>(playerData);
 
-                var existingEntity = _db.Players
+                var existingEntity = await _db.Players
                     .Include(x => x.Position)
-                    .FirstOrDefault(x => x.FirstName == mapedPlayer.FirstName && x.LastName == mapedPlayer.LastName);
+                    .FirstOrDefaultAsync(x => x.FirstName == mapedPlayer.FirstName && x.LastName == mapedPlayer.LastName);
 
                 mapedPlayer.Id = existingEntity.Id;
                 mapedPlayer.UserId = existingEntity.UserId;
@@ -68,8 +69,7 @@ namespace RageMpServer
                 _db.Entry(existingEntity.Position).CurrentValues.SetValues(mapedPlayer.Position);
                 _db.Entry(existingEntity).CurrentValues.SetValues(mapedPlayer);
 
-                _db.Players.Update(existingEntity);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
             }
         }
     }
