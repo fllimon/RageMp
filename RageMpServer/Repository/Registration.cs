@@ -5,6 +5,8 @@ using System.Linq;
 using RageMpServer.Models;
 using RageMpServer.Extensions;
 using AutoMapper;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace RageMpServer.Repository
 {
@@ -20,7 +22,7 @@ namespace RageMpServer.Repository
         }
 
         [RemoteEvent("CLIENT:SERVER:RegisterUser")]
-        public void RegistrationInfoFromClient(GTANetworkAPI.Player player, string login, string email, string password)
+        public async Task RegistrationInfoFromClient(Player player, string login, string email, string password)
         {
             if (IsNullOrEmpty(login) || IsNullOrEmpty(email) || IsNullOrEmpty(password))
             {
@@ -29,7 +31,7 @@ namespace RageMpServer.Repository
                 return;
             }
 
-            if (!IsExist(login, email, player.SocialClubName))
+            if (!await IsExist(login, email, player.SocialClubName))
             {
                 NAPI.ClientEvent.TriggerClientEvent(player, "AuthError");
 
@@ -46,7 +48,7 @@ namespace RageMpServer.Repository
             };
 
             AddUser(user);
-            SaveChanges();
+            await SaveChangesAsync();
 
             NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowAuthCef", false);
             NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowCreatePlayerForm", true, user.Id);
@@ -54,16 +56,16 @@ namespace RageMpServer.Repository
         }
 
         [RemoteEvent("CLIENT:SERVER:CreatePlayer")]
-        public void CreatePlayer(GTANetworkAPI.Player player, string firstName, string lastName, string userId)
+        public async Task CreatePlayer(Player player, string firstName, string lastName, string userId)
         {
             Guid id = Guid.Parse(userId);
 
-            if (!IsPlayerExistByUserId(id) && !IsPlayerExist(firstName, lastName))
+            if (!await IsPlayerExistByUserId(id) && !await IsPlayerExist(firstName, lastName))
             {
                 return;
             }
 
-            var newPlayer = new Models.Player()
+            var newPlayer = new Models.CustomPlayer()
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -73,7 +75,7 @@ namespace RageMpServer.Repository
             };
 
             AddPlayer(newPlayer);
-            SaveChanges();
+            await SaveChangesAsync();
 
             NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowCreatePlayerForm", false);
 
@@ -88,7 +90,7 @@ namespace RageMpServer.Repository
             }
         }
 
-        private void AddPlayer(Models.Player player)
+        private void AddPlayer(CustomPlayer player)
         {
             _db.Players.Add(player);
         }
@@ -98,9 +100,9 @@ namespace RageMpServer.Repository
             _db.Users.Add(user);
         }
 
-        private void SaveChanges()
+        private async Task SaveChangesAsync()
         {
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
         private bool IsNullOrEmpty(string value)
@@ -115,19 +117,19 @@ namespace RageMpServer.Repository
             return isNull;
         }
 
-        private bool IsExist(string login, string email, string socialName)
+        private async Task<bool> IsExist(string login, string email, string socialName)
         {
-            return _db.Users.FirstOrDefault(x => x.Login == login || x.Email == email || x.SocialClubName == socialName) == null;
+            return await _db.Users.FirstOrDefaultAsync(x => x.Login == login || x.Email == email || x.SocialClubName == socialName) == null;
         }
 
-        private bool IsPlayerExistByUserId(Guid id)
+        private async Task<bool> IsPlayerExistByUserId(Guid id)
         {
-            return _db.Players.FirstOrDefault(x => x.UserId == id) == null;
+            return await _db.Players.FirstOrDefaultAsync(x => x.UserId == id) == null;
         }
 
-        private bool IsPlayerExist(string firstName, string lastName)
+        private async Task<bool> IsPlayerExist(string firstName, string lastName)
         {
-            return _db.Players.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName) == null;
+            return await _db.Players.FirstOrDefaultAsync(x => x.FirstName == firstName && x.LastName == lastName) == null;
         }
     }
 }

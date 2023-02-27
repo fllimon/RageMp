@@ -1,8 +1,5 @@
 ﻿using RAGE;
 using RAGE.Ui;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RageClient
 {
@@ -11,6 +8,12 @@ namespace RageClient
         public Command()
         {
             Input.Bind(VirtualKeys.P, down:true, GetCoordinate);
+            Input.Bind(VirtualKeys.F2, down:true, ShowCursor);
+        }
+
+        private void ShowCursor()
+        {
+            Cursor.ShowCursor(false, true);
         }
 
         private void GetCoordinate()

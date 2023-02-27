@@ -10,7 +10,7 @@ namespace RageMpServer.Commands
         [RemoteEvent("CLIENT:SERVER:GetCoordinate")]
         public void GetCoordinates(Player player)
         {
-            player.SendChatMessage($"POSITION: - X: {player.Position.X} - Z: {player.Position.X} - Z: {player.Position.Z}");
+            player.SendChatMessage($"POSITION: - X: {player.Position.X} - Y: {player.Position.Y} - Z: {player.Position.Z}");
         }
     }
 }

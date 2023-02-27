@@ -14,6 +14,7 @@ namespace RageMpServer
         private Chat _chat = null;
         private RageContext _db = null;
         private IMapper _mapper = null;
+        private Repository.Blip _blip = null;
 
 
         [ServerEvent(Event.ResourceStart)]
@@ -21,10 +22,19 @@ namespace RageMpServer
         {
             _db = DbInitializer.GetInstance();
             _mapper = MapperInitializer.GetInstance();
-            
+            _blip = new Repository.Blip();
+
             _chat = new Chat();
             NAPI.Server.SetGlobalServerChat(false);
             NAPI.Server.SetAutoRespawnAfterDeath(false);
+
+            _blip.CreateBlip(162, new Vector3(-1017, -2695, 13), 2, 1f, "Аренда", false);
+
+            for (int i = 0; i < 1; i++)
+            {
+                var position = new Vector3(-1019.85, -2694.38, 9.98);
+                NAPI.Vehicle.CreateVehicle(VehicleHash.Surge, position, 150f, 0, 0, "", 255, false, false, NAPI.GlobalDimension);
+            }
 
             NAPI.Util.ConsoleOutput("=========== Successfuly Started ==========");
         }
@@ -54,7 +64,7 @@ namespace RageMpServer
                 playerData.Health = player.Health;
                 playerData.Armor = player.Armor;
 
-                var mapedPlayer = _mapper.Map<Models.Player>(playerData);
+                var mapedPlayer = _mapper.Map<Models.CustomPlayer>(playerData);
 
                 var existingEntity = await _db.Players
                     .Include(x => x.Position)

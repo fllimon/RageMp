@@ -8,7 +8,7 @@ namespace RageMpServer.Models
     {
         public Guid Id { get; set; }
         public Guid PlayerId { get; set; }
-        public Player Player { get; set; }
+        public CustomPlayer Player { get; set; }
         public float PositionX { get; set; } = -1042.7578f;
         public float PositionY { get; set; } = -2746.206f;
         public float PositionZ { get; set; } = 21.35938f;

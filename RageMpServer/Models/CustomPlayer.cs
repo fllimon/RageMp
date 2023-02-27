@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RageMpServer.Models
 {
-    class Player
+    class CustomPlayer
     {
         public Guid Id { get; set; }
 
@@ -33,7 +33,7 @@ namespace RageMpServer.Models
 
         public DateTime CreatedDate { get; set; }
 
-        public Player()
+        public CustomPlayer()
         {
             Id = Guid.NewGuid();
         }

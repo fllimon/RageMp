@@ -12,7 +12,7 @@ namespace RageMpServer.Contexts
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<Player> Players { get; set; }
+        public DbSet<CustomPlayer> Players { get; set; }
 
         public DbSet<PlayerPosition> PlayersPositions { get; set; }
 
