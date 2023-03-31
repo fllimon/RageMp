@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RageMpServer.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RageMpServer.DatabaseEntities;
 
 namespace RageMpServer.Contexts
 {

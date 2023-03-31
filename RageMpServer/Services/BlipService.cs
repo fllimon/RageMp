@@ -1,12 +1,8 @@
 ﻿using GTANetworkAPI;
-using RageMpServer.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RageMpServer.Repository
+namespace RageMpServer.Services
 {
-    public class Blip : Script
+    public class BlipService : Script
     {
         public void CreateBlip(int sprite, Vector3 position, byte color, float scale, string name, bool isShortRange)
         {

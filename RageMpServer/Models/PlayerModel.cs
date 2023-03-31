@@ -1,11 +1,8 @@
 ﻿using GTANetworkAPI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RageMpServer.Entity
+namespace RageMpServer.Models
 {
-    class Player
+    class PlayerModel
     {
         public static readonly string PLayerData = "Player_Info";
 

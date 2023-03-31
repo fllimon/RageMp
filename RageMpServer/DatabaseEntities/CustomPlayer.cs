@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace RageMpServer.Models
+namespace RageMpServer.DatabaseEntities
 {
-    class CustomPlayer
+    public class CustomPlayer
     {
         public Guid Id { get; set; }
 

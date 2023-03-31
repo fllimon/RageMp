@@ -13,6 +13,11 @@ namespace RageClient
 
         private void ShowCursor()
         {
+            if (!Cursor.Visible)
+            {
+                Cursor.ShowCursor(false, false);
+            }
+
             Cursor.ShowCursor(false, true);
         }
 

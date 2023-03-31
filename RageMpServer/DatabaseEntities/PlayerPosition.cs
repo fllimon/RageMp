@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RageMpServer.Models
+namespace RageMpServer.DatabaseEntities
 {
-    class PlayerPosition
+    public class PlayerPosition
     {
         public Guid Id { get; set; }
         public Guid PlayerId { get; set; }

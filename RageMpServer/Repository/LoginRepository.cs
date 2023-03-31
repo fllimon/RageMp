@@ -4,28 +4,31 @@ using System.Threading.Tasks;
 using AutoMapper;
 using GTANetworkAPI;
 using Microsoft.EntityFrameworkCore;
-using NLog;
 using RageMpServer.Contexts;
+using RageMpServer.DatabaseEntities;
 using RageMpServer.Extensions;
 using RageMpServer.Models;
 
 namespace RageMpServer.Repository
 {
-    class Login : Script
+    class LoginRepository : Script
     {
         private RageContext _db = null;
         private IMapper _mapper = null;
-        private static Logger _logger = null;
 
-        public Login()
+        public LoginRepository()
         {
             _db = DbInitializer.GetInstance();
             _mapper = MapperInitializer.GetInstance();
-            _logger = LogManager.GetCurrentClassLogger();
         }
 
         [RemoteEvent("CLIENT:SERVER:SendLoginInfo")]
-        public async Task LoginInfoFromClient(GTANetworkAPI.Player player, string login, string password)
+        public void LoginInfoFromClient(Player player, string login, string password)
+        {
+            NAPI.Task.Run(async () => await LoginPlayer(player, login, password)); 
+        }
+
+        private async Task LoginPlayer(Player player, string login, string password)
         {
             var user = await GetUserByLogin(login);
 
@@ -51,12 +54,12 @@ namespace RageMpServer.Repository
 
                 NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowAuthCef", false);
 
-                var playerData = _mapper.Map<Entity.Player>(entity);
-                var hasData = player.HasData(Entity.Player.PLayerData);
+                var playerData = _mapper.Map<PlayerModel>(entity);
+                var hasData = player.HasData(PlayerModel.PLayerData);
 
                 if (!hasData)
                 {
-                    player.SetData(Entity.Player.PLayerData, playerData);
+                    player.SetData(PlayerModel.PLayerData, playerData);
                     player.Name = playerData.FirstName + " " + playerData.LastName;
                     player.Position = playerData.Position;
                     player.Health = playerData.Health;
@@ -64,7 +67,7 @@ namespace RageMpServer.Repository
                     player.Dimension = NAPI.GlobalDimension;
                 }
 
-                _logger.Info("RemoteEvent:LoginInfoFromClient: {@player}", player);
+                NAPI.Player.FreezePlayerTime(player, false);
             }
         }
 

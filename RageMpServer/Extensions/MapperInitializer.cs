@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using RageMpServer.DatabaseEntities;
+using RageMpServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,7 +17,7 @@ namespace RageMpServer.Extensions
             {
                 var config = new MapperConfiguration(cfg =>
                 {
-                    cfg.CreateMap<Models.CustomPlayer, Entity.Player>()
+                    cfg.CreateMap<CustomPlayer, PlayerModel>()
                     .ForPath(x => x.Position.X, option => option.MapFrom(x => x.Position.PositionX))
                     .ForPath(x => x.Position.Y, option => option.MapFrom(x => x.Position.PositionY))
                     .ForPath(x => x.Position.Z, option => option.MapFrom(x => x.Position.PositionZ))
@@ -23,7 +25,7 @@ namespace RageMpServer.Extensions
                     .ForPath(x => x.Rotation.Y, option => option.MapFrom(x => x.Position.RotationY))
                     .ForPath(x => x.Rotation.Z, option => option.MapFrom(x => x.Position.RotationZ));
 
-                    cfg.CreateMap<Entity.Player, Models.CustomPlayer>()
+                    cfg.CreateMap<PlayerModel, CustomPlayer>()
                     .ForPath(x => x.Position.PositionX, option => option.MapFrom(x => x.Position.X))
                     .ForPath(x => x.Position.PositionY, option => option.MapFrom(x => x.Position.Y))
                     .ForPath(x => x.Position.PositionZ, option => option.MapFrom(x => x.Position.Z))

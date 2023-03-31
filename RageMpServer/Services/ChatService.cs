@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GTANetworkAPI;
 
-namespace RageMpServer.Repository
+namespace RageMpServer.Services
 {
-    class Chat
+    public class ChatService
     {
         public void CustomChat(Player player, string message, double radius, string color)
         {

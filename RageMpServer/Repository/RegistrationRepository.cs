@@ -7,22 +7,23 @@ using RageMpServer.Extensions;
 using AutoMapper;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using RageMpServer.DatabaseEntities;
 
 namespace RageMpServer.Repository
 {
-    class Registration : Script
+    class RegistrationRepository : Script
     {
         private RageContext _db = null;
         private IMapper _mapper = null;
 
-        public Registration()
+        public RegistrationRepository()
         {
             _db = DbInitializer.GetInstance();
             _mapper = MapperInitializer.GetInstance();
         }
 
         [RemoteEvent("CLIENT:SERVER:RegisterUser")]
-        public async Task RegistrationInfoFromClient(Player player, string login, string email, string password)
+        public void RegistrationInfoFromClient(Player player, string login, string email, string password)
         {
             if (IsNullOrEmpty(login) || IsNullOrEmpty(email) || IsNullOrEmpty(password))
             {
@@ -31,7 +32,7 @@ namespace RageMpServer.Repository
                 return;
             }
 
-            if (!await IsExist(login, email, player.SocialClubName))
+            if (!IsExist(login, email, player.SocialClubName))
             {
                 NAPI.ClientEvent.TriggerClientEvent(player, "AuthError");
 
@@ -48,7 +49,7 @@ namespace RageMpServer.Repository
             };
 
             AddUser(user);
-            await SaveChangesAsync();
+            SaveChangesAsync();
 
             NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowAuthCef", false);
             NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowCreatePlayerForm", true, user.Id);
@@ -56,16 +57,16 @@ namespace RageMpServer.Repository
         }
 
         [RemoteEvent("CLIENT:SERVER:CreatePlayer")]
-        public async Task CreatePlayer(Player player, string firstName, string lastName, string userId)
+        public void CreatePlayer(Player player, string firstName, string lastName, string userId)
         {
             Guid id = Guid.Parse(userId);
 
-            if (!await IsPlayerExistByUserId(id) && !await IsPlayerExist(firstName, lastName))
+            if (!IsPlayerExistByUserId(id) && !IsPlayerExist(firstName, lastName))
             {
                 return;
             }
 
-            var newPlayer = new Models.CustomPlayer()
+            var newPlayer = new CustomPlayer()
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -75,16 +76,16 @@ namespace RageMpServer.Repository
             };
 
             AddPlayer(newPlayer);
-            await SaveChangesAsync();
+            SaveChangesAsync();
 
             NAPI.ClientEvent.TriggerClientEvent(player, "SERVER:CLIENT:ShowCreatePlayerForm", false);
 
-            var playerData = _mapper.Map<Entity.Player>(newPlayer);
-            var hasData = player.HasData(Entity.Player.PLayerData);
+            var playerData = _mapper.Map<PlayerModel>(newPlayer);
+            var hasData = player.HasData(PlayerModel.PLayerData);
 
             if (!hasData)
             {
-                player.SetData(Entity.Player.PLayerData, playerData);
+                player.SetData(PlayerModel.PLayerData, playerData);
                 player.Name = playerData.FirstName + " " + playerData.LastName;
                 player.Position = playerData.Position;
             }
@@ -100,9 +101,9 @@ namespace RageMpServer.Repository
             _db.Users.Add(user);
         }
 
-        private async Task SaveChangesAsync()
+        private void SaveChangesAsync()
         {
-            await _db.SaveChangesAsync();
+            _db.SaveChanges();
         }
 
         private bool IsNullOrEmpty(string value)
@@ -117,19 +118,19 @@ namespace RageMpServer.Repository
             return isNull;
         }
 
-        private async Task<bool> IsExist(string login, string email, string socialName)
+        private bool IsExist(string login, string email, string socialName)
         {
-            return await _db.Users.FirstOrDefaultAsync(x => x.Login == login || x.Email == email || x.SocialClubName == socialName) == null;
+            return _db.Users.FirstOrDefault(x => x.Login == login || x.Email == email || x.SocialClubName == socialName) == null;
         }
 
-        private async Task<bool> IsPlayerExistByUserId(Guid id)
+        private bool IsPlayerExistByUserId(Guid id)
         {
-            return await _db.Players.FirstOrDefaultAsync(x => x.UserId == id) == null;
+            return _db.Players.FirstOrDefault(x => x.UserId == id) == null;
         }
 
-        private async Task<bool> IsPlayerExist(string firstName, string lastName)
+        private bool IsPlayerExist(string firstName, string lastName)
         {
-            return await _db.Players.FirstOrDefaultAsync(x => x.FirstName == firstName && x.LastName == lastName) == null;
+            return _db.Players.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName) == null;
         }
     }
 }

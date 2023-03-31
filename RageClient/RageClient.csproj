@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="del &quot;C:\RAGEMP\server-files\client_packages\cs_packages\*.*&quot; /Q&#xD;&#xA;for /R %25CD%25 %25%25i in (*.cs) do (&#xD;&#xA; xcopy %25%25i &quot;C:\RAGEMP\server-files\client_packages\cs_packages\&quot; /Q /Y /EXCLUDE:exclude.txt&#xD;&#xA;)" />
+    <Exec Command="del &quot;C:\RageMp\server-files\client_packages\cs_packages\*.*&quot; /Q&#xD;&#xA;for /R %25CD%25 %25%25i in (*.cs) do (&#xD;&#xA; xcopy %25%25i &quot;C:\RageMp\server-files\client_packages\cs_packages\&quot; /Q /Y /EXCLUDE:exclude.txt&#xD;&#xA;)" />
   </Target>
 
 </Project>
